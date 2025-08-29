@@ -1,2 +1,4 @@
 ---
 # vars file for torlowski.installator_pgpool
+pgpool_repo_url: https://www.pgpool.net/yum/rpms/4.6/redhat/rhel-9Server-$basearch
+pgpool_version: 16

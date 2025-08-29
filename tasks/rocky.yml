@@ -1,0 +1,45 @@
+- name: Add pgpool-II repository
+  become: true
+  tags: standard
+  copy:
+    dest: /etc/yum.repos.d/pgpool-II.repo
+    content: |
+      [pgpool-II]
+      name=Pgpool-II for RHEL 9 - $basearch
+      baseurl={{ pgpool_repo_url }}
+      enabled=1
+      gpgcheck=0
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: enable powertools repository r9 (crb)
+  shell: dnf config-manager --set-enabled crb
+  become: true
+  tags: standard
+
+- name: Make sure pgpool-II is installed
+  become: true
+  tags: standard
+  dnf:
+    name: libmemcached-devel
+    state: present
+    update_cache: true
+
+- name: Make sure pgpool-II is installed
+  become: true
+  tags: standard
+  dnf:
+    name:
+      - pgpool-II-pg{{ pgpool_version }}.x86_64
+      - pgpool-II-pg{{ pgpool_version }}-extensions.x86_64
+    state: present
+    update_cache: true
+
+- name: Enable and start pgpool-II service
+  become: true
+  tags: standard
+  systemd:
+    name: pgpool
+    enabled: true
+    state: started
